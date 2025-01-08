@@ -1,18 +1,25 @@
-import { desktopCapturer, BrowserWindow } from 'electron'
+import { desktopCapturer, BrowserWindow, webContents } from 'electron'
 import { ipcMain } from 'electron'
 import { createWindow } from './'
+
+const enum channel_enum {
+  CAPTURE_SCREEN = 'CaptureScreen',
+  OPEN_WINDOW = 'OpenWindow',
+  EV_SEND_DESKTOP_CAPTURER_SOURCE = 'ev:send-desktop-capturer_source',
+  // OPEN_DEVTOOL = 'OpenDevtool',
+}
 
 /**
  * @desc 获取屏幕源
  * */
-ipcMain.handle('CaptureScreen', async (): Promise<Electron.DesktopCapturerSource[]> => {
+ipcMain.handle(channel_enum.CAPTURE_SCREEN, async (): Promise<Electron.DesktopCapturerSource[]> => {
   return await desktopCapturer.getSources({ types: ['screen'] })
 })
 
 /**
  * @desc 打开一个新的截图窗口
  * */
-ipcMain.on('OpenWindow', (): BrowserWindow => {
+ipcMain.on(channel_enum.OPEN_WINDOW, (): BrowserWindow => {
   const window = createWindow(
     'screen_capture',
     { debug: true },
@@ -33,7 +40,40 @@ ipcMain.on('OpenWindow', (): BrowserWindow => {
         contextIsolation: false,
       },
     },
-
   )
   return window
+})
+
+/**
+ * @desc 打开一个控制台
+ * */
+// ipcMain.handle(channel_enum.OPEN_DEVTOOL, opendevt)
+// 修复electron18.0.0-beta.5 之后版本的BUG: 无法获取当前程序页面视频流
+const selfWindws = async () =>
+  await Promise.all(
+    webContents
+      .getAllWebContents()
+      .filter((item) => {
+        const win = BrowserWindow.fromWebContents(item)
+        return win && win.isVisible()
+      })
+      .map(async (item) => {
+        const win = BrowserWindow.fromWebContents(item)
+        const thumbnail = await win?.capturePage()
+        // 当程序窗口打开DevTool的时候  也会计入
+        return {
+          name: win?.getTitle() + (item.devToolsWebContents === null ? '' : '-dev'), // 给dev窗口加上后缀
+          id: win?.getMediaSourceId(),
+          thumbnail,
+          display_id: '',
+          appIcon: null,
+        }
+      }),
+  )
+// 获取设备窗口信息
+ipcMain.handle(channel_enum.EV_SEND_DESKTOP_CAPTURER_SOURCE, async () => {
+  return [
+    ...(await desktopCapturer.getSources({ types: ['window', 'screen'] })),
+    ...(await selfWindws()),
+  ]
 })

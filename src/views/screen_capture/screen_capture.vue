@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    <el-button @click="open_devtools">打开控制台</el-button>
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -7,6 +9,7 @@ import ScreenShot from 'js-web-screen-shot'
 import { onMounted } from 'vue'
 import { get_capture_screen } from '@/utils/index.ts'
 
+const open_devtools = () => {}
 const doScreenShot = async () => {
   // 下面这两块自己考虑
   const sources = await get_capture_screen() // 这里返回的是设备上的所有窗口信息
