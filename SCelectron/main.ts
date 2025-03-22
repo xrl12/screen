@@ -2,18 +2,17 @@ import { app } from 'electron'
 import path from 'path'
 import '@/utils/register_handle.ts'
 import { createWindow } from './utils'
+import { default_value } from './enum'
 
 app.whenReady().then(() => {
-  createWindow(
-    'dashboard',
+  const win = createWindow(
+    'dashboard/name',
     { debug: true },
     {
-      width: 800,
-      height: 100,
-      maxHeight: 100,
-      maxWidth: 800,
-      minWidth: 800,
-      minHeight: 100,
+      title: '截图小工具',
+      width: default_value.MAIN_WINDOW_WIDTH,
+      height: default_value.MAIN_WINDOW_HEIGHT,
+      transparent: true,
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
@@ -21,6 +20,7 @@ app.whenReady().then(() => {
       },
     },
   )
+  win.setBackgroundColor('rgba(0, 0, 0, 0)')
 })
 
 app.on('window-all-closed', () => {

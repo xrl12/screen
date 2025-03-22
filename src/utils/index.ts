@@ -15,13 +15,13 @@ export const show_alert = (options: MessageParams) => {
 export const get_capture_screen = (): Promise<DesktopCapturerSource[]> => {
   return window.electron.CaptureScreen()
 }
-
-/**
- * @desc 打开一个新的窗口
- * */
-export const open_new_window = (): undefined => {
-  window.electron.OpenWindow()
-}
+//
+// /**
+//  * @desc 打开一个新的窗口
+//  * */
+// export const open_new_window = (): undefined => {
+//   window.electron.OpenWindow()
+// }
 
 // 获取指定id设备的视频流
 export function getInitStream(
@@ -56,4 +56,25 @@ export function getInitStream(
         resolve(null)
       })
   })
+}
+
+// /**
+//  * @desc 关闭截图窗口
+//  */
+// export const close_screen_window = () => {
+//   return window.electron.CLoseWindow()
+// }
+
+/**
+ * @desc 将当前屏幕设置成全屏
+ * */
+export const set_full_screen = () => {
+  return window.electron.SetFullScreen()
+}
+
+/**
+ * @desc 取消全屏
+ * */
+export const cancel_full_screen = () => {
+  return window.electron.cancel_full_screen()
 }

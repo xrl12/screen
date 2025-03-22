@@ -1,5 +1,6 @@
 import { app, BrowserWindow, type BrowserWindowConstructorOptions, globalShortcut } from 'electron'
 
+export const BASE_PATH = __dirname
 export const open_dev_tools = (win: BrowserWindow): void => {
   // 监听Mac的command+shift+i
   globalShortcut.register('Command+Shift+I', () => {

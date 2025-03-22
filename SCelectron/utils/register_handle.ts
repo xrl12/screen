@@ -1,13 +1,7 @@
 import { desktopCapturer, BrowserWindow, webContents } from 'electron'
-import { ipcMain } from 'electron'
-import { createWindow } from './'
+import { ipcMain, screen } from 'electron'
 
-const enum channel_enum {
-  CAPTURE_SCREEN = 'CaptureScreen',
-  OPEN_WINDOW = 'OpenWindow',
-  EV_SEND_DESKTOP_CAPTURER_SOURCE = 'ev:send-desktop-capturer_source',
-  // OPEN_DEVTOOL = 'OpenDevtool',
-}
+import { channel_enum, default_value } from '../enum'
 
 /**
  * @desc 获取屏幕源
@@ -16,64 +10,70 @@ ipcMain.handle(channel_enum.CAPTURE_SCREEN, async (): Promise<Electron.DesktopCa
   return await desktopCapturer.getSources({ types: ['screen'] })
 })
 
-/**
- * @desc 打开一个新的截图窗口
- * */
-ipcMain.on(channel_enum.OPEN_WINDOW, (): BrowserWindow => {
-  const window = createWindow(
-    'screen_capture',
-    { debug: true },
-    {
-      autoHideMenuBar: true, // 自动隐藏菜单栏
-      useContentSize: true, // width 和 height 将设置为 web 页面的尺寸
-      movable: false, // 是否可移动
-      frame: false, // 无边框窗口
-      resizable: false, // 窗口大小是否可调整
-      hasShadow: false, // 窗口是否有阴影
-      transparent: true, // 使窗口透明
-      fullscreenable: true, // 窗口是否可以进入全屏状态
-      fullscreen: true, // 窗口是否全屏
-      simpleFullscreen: true, // 在 macOS 上使用 pre-Lion 全屏
-      alwaysOnTop: true, // 窗口是否永远在别的窗口的上面
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false,
-      },
-    },
-  )
-  return window
-})
-
-/**
- * @desc 打开一个控制台
- * */
-// ipcMain.handle(channel_enum.OPEN_DEVTOOL, opendevt)
-// 修复electron18.0.0-beta.5 之后版本的BUG: 无法获取当前程序页面视频流
-const selfWindws = async () =>
-  await Promise.all(
-    webContents
-      .getAllWebContents()
-      .filter((item) => {
-        const win = BrowserWindow.fromWebContents(item)
-        return win && win.isVisible()
-      })
-      .map(async (item) => {
-        const win = BrowserWindow.fromWebContents(item)
-        const thumbnail = await win?.capturePage()
-        // 当程序窗口打开DevTool的时候  也会计入
-        return {
-          name: win?.getTitle() + (item.devToolsWebContents === null ? '' : '-dev'), // 给dev窗口加上后缀
-          id: win?.getMediaSourceId(),
-          thumbnail,
-          display_id: '',
-          appIcon: null,
-        }
-      }),
-  )
 // 获取设备窗口信息
 ipcMain.handle(channel_enum.EV_SEND_DESKTOP_CAPTURER_SOURCE, async () => {
+  // 修复electron18.0.0-beta.5 之后版本的BUG: 无法获取当前程序页面视频流
+  const selfWindws = async () =>
+    await Promise.all(
+      webContents
+        .getAllWebContents()
+        .filter((item) => {
+          const win = BrowserWindow.fromWebContents(item)
+          return win && win.isVisible()
+        })
+        .map(async (item) => {
+          const win = BrowserWindow.fromWebContents(item)
+          const thumbnail = await win?.capturePage()
+          // 当程序窗口打开DevTool的时候  也会计入
+          return {
+            name: win?.getTitle() + (item.devToolsWebContents === null ? '' : '-dev'), // 给dev窗口加上后缀
+            id: win?.getMediaSourceId(),
+            thumbnail,
+            display_id: '',
+            appIcon: null,
+          }
+        }),
+    )
   return [
     ...(await desktopCapturer.getSources({ types: ['window', 'screen'] })),
     ...(await selfWindws()),
   ]
+})
+
+// 修改窗口宽和高
+ipcMain.on(channel_enum.SET_FULL_SCREEN, (event) => {
+  // 将当前窗口宽度和高度设置为100%
+  const win = BrowserWindow.fromWebContents(event.sender)
+  // const { width, height } = screen.getPrimaryDisplay().bounds
+
+  const { width, height } = screen.getPrimaryDisplay()
+  console.log(width, height)
+  // const { width, height } = screen.getPrimaryDisplay().size
+  if (win) {
+    win.setBackgroundColor('rgba(0, 0, 0, 0)')
+    // win.setBackgroundColor('rgb(0, 0, 0, 0)')
+    win.setSize(width, height, false)
+    win.setMenuBarVisibility(true) // 隐藏菜单栏
+    win.setResizable(false) // 禁止调整窗口大小
+    win.setPosition(0, 0) // 将窗口位置设置为左上角
+    win.setAlwaysOnTop(true) // 将窗口放在所有窗口最上面
+  }
+})
+
+ipcMain.on(channel_enum.CANCEL_FULL_SCREEN, (event) => {
+  // 将当前窗口宽度和高度设置为100%
+  const win = BrowserWindow.fromWebContents(event.sender)
+  // 获取当前窗口的宽度和高度
+  const { width, height } = screen.getPrimaryDisplay().size
+  if (win) {
+    win.setBackgroundColor('hsla(200, 20%, 50%, 0)')
+    win.setSize(default_value.MAIN_WINDOW_WIDTH, default_value.MAIN_WINDOW_HEIGHT, false)
+    win.setMenuBarVisibility(false) // 隐藏菜单栏
+    win.setResizable(true) // 禁止调整窗口大小
+    win.setPosition(
+      Math.round((width - default_value.MAIN_WINDOW_WIDTH) / 2),
+      Math.round((height - default_value.MAIN_WINDOW_HEIGHT) / 2),
+    ) // 将窗口位置设置为屏幕中
+    win.setAlwaysOnTop(false) // 将窗口放在所有窗口最上面
+  }
 })
