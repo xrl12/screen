@@ -51,6 +51,7 @@ const btn_list = reactive<CustomButtonProps[]>([
 ])
 onMounted(() => {
   if (route.params?.is_cancel) {
+    console.log('hello world')
     cancel_full_screen()
   }
 })

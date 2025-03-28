@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div class="container">
+    <!--    <el-button @click="back">返回主页</el-button>-->
+  </div>
 </template>
 <script setup lang="ts">
 import ScreenShot from 'js-web-screen-shot'
@@ -14,7 +16,6 @@ const doScreenShot = async () => {
   const sources = await get_capture_screen() // 这里返回的是设备上的所有窗口信息
   // 这里可以对`sources`数组下面id进行判断  找到当前的electron窗口  这里为了简单直接拿了第一个
   const stream = await getInitStream(sources[0])
-  console.log(stream, 'stream')
   new ScreenShot({
     enableWebRtc: true, // 启用webrtc
     screenFlow: stream!, // 传入屏幕流数据
@@ -32,6 +33,9 @@ const doScreenShot = async () => {
   })
 }
 
+// const back = () => {
+//   router.push({ name: 'dashboard', params: { is_cancel: 'true' } })
+// }
 onMounted(() => {
   set_full_screen()
   doScreenShot()
@@ -41,4 +45,9 @@ onMounted(() => {
 })
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.container {
+  width: 100%;
+  height: 100%;
+}
+</style>

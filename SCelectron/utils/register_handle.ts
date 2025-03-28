@@ -44,17 +44,18 @@ ipcMain.handle(channel_enum.EV_SEND_DESKTOP_CAPTURER_SOURCE, async () => {
 ipcMain.on(channel_enum.SET_FULL_SCREEN, (event) => {
   // 将当前窗口宽度和高度设置为100%
   const win = BrowserWindow.fromWebContents(event.sender)
-  // const { width, height } = screen.getPrimaryDisplay().bounds
-
-  const { width, height } = screen.getPrimaryDisplay()
-  console.log(width, height)
-  // const { width, height } = screen.getPrimaryDisplay().size
+  win.setBackgroundColor('rgba(0, 0, 0, 0)')
+  // 覆盖在当前的窗口上，使其全屏
+  // win.setFullScreen(true)
+  const { width, height } = screen.getPrimaryDisplay().size
   if (win) {
-    win.setBackgroundColor('rgba(0, 0, 0, 0)')
-    // win.setBackgroundColor('rgb(0, 0, 0, 0)')
+    // 获取当前屏幕的宽度和高度
     win.setSize(width, height, false)
-    win.setMenuBarVisibility(true) // 隐藏菜单栏
-    win.setResizable(false) // 禁止调整窗口大小
+    win.setBackgroundColor('rgba(0, 0, 0, 0)')
+    // win.setBackgroundColor('rgb(0, 0, 0)')
+    // win.setSize(width, height, false)
+    win.setMenuBarVisibility(false) // 隐藏菜单栏
+    // win.setResizable(false) // 禁止调整窗口大小
     win.setPosition(0, 0) // 将窗口位置设置为左上角
     win.setAlwaysOnTop(true) // 将窗口放在所有窗口最上面
   }
@@ -66,6 +67,7 @@ ipcMain.on(channel_enum.CANCEL_FULL_SCREEN, (event) => {
   // 获取当前窗口的宽度和高度
   const { width, height } = screen.getPrimaryDisplay().size
   if (win) {
+    win.setFullScreen(false)
     win.setBackgroundColor('hsla(200, 20%, 50%, 0)')
     win.setSize(default_value.MAIN_WINDOW_WIDTH, default_value.MAIN_WINDOW_HEIGHT, false)
     win.setMenuBarVisibility(false) // 隐藏菜单栏

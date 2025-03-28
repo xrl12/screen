@@ -1,18 +1,20 @@
-import { app } from 'electron'
+import { app, screen } from 'electron'
 import path from 'path'
 import '@/utils/register_handle.ts'
 import { createWindow } from './utils'
 import { default_value } from './enum'
 
 app.whenReady().then(() => {
-  const win = createWindow(
+    const win = createWindow(
     'dashboard/name',
     { debug: true },
     {
       title: '截图小工具',
       width: default_value.MAIN_WINDOW_WIDTH,
+      frame: false,
       height: default_value.MAIN_WINDOW_HEIGHT,
       transparent: true,
+      roundedCorners: false,
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
