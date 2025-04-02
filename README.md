@@ -1,45 +1,30 @@
-# screen
+# 使用electron+vue+node开发的截屏工具
 
-This template should help get you started developing with Vue 3 in Vite.
+是一个截屏软件，它是一个跨平台的软件，支持Mac，win系统。<br />
+它的界面简洁，操作简单，功能强大，是一个非常好用的截屏工具。<br/>
+非常安利大家使用。
 
-## Recommended IDE Setup
+## 联系作者
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
-
-```sh
-bun install
+```aiignore
+QQ:  1047831061
+email: mrxu_000824@163.com
 ```
 
-### Compile and Hot-Reload for Development
+## 功能
 
-```sh
-bun dev
-```
+- [x] 自定义截屏区域
+- [x] 支持把截图保存到剪切板
+- [ ] 支持把截图保存到本地
+- [ ] 支持可以获取之前的的截图
+- [ ] 支持自己修改热键
+- [ ] 支持录屏
+- [ ] 支持截取长图
 
-### Type-Check, Compile and Minify for Production
+# 打包成桌面应用
 
-```sh
-bun run build
-```
+# 启动项目
+```bash
+# 安装依赖
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
-
-```sh
-bun test:unit
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-bun lint
 ```
