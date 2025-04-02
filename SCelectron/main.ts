@@ -1,11 +1,11 @@
-import { app, screen } from 'electron'
+import { app } from 'electron'
 import path from 'path'
 import '@/utils/register_handle.ts'
 import { createWindow } from './utils'
 import { default_value } from './enum'
 
 app.whenReady().then(() => {
-    const win = createWindow(
+  const win = createWindow(
     'dashboard/name',
     { debug: true },
     {

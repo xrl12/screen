@@ -78,3 +78,10 @@ export const set_full_screen = () => {
 export const cancel_full_screen = () => {
   return window.electron.cancel_full_screen()
 }
+
+/**
+ * @desc 获取配置
+ * */
+export const get_config = async () => {
+  return await window.electron.GetConfig()
+}

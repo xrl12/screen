@@ -1,6 +1,8 @@
 import { app, BrowserWindow, type BrowserWindowConstructorOptions, globalShortcut } from 'electron'
+import { default_config } from '../enum'
+import * as fs from 'node:fs'
+import type { DefaultConfig } from '../enum/type'
 
-export const BASE_PATH = __dirname
 export const open_dev_tools = (win: BrowserWindow): void => {
   // 监听Mac的command+shift+i
   globalShortcut.register('Command+Shift+I', () => {
@@ -28,4 +30,21 @@ export const createWindow = (
   } else {
   }
   return mainWindow
+}
+
+export const get_config = (path: string | null): DefaultConfig => {
+  if (path === null) {
+    return default_config
+  } else {
+    let obj = {}
+    // 判断当前path是否存在，如果存在读取配置，如果不存在就返回默认值
+    if (fs.existsSync(path)) {
+      try {
+        obj = Object.assign({}, default_config, JSON.parse(fs.readFileSync(path, 'utf8')))
+      } catch {
+        obj = default_config
+      }
+      return <DefaultConfig>obj
+    }
+  }
 }

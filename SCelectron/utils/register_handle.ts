@@ -1,7 +1,10 @@
 import { desktopCapturer, BrowserWindow, webContents } from 'electron'
 import { ipcMain, screen } from 'electron'
 
-import { channel_enum, default_value } from '../enum'
+import { channel_enum, DEFAULT_CONFIG_PATH, default_value } from '../enum'
+import type { DefaultConfig } from '../enum/type'
+import { get_config } from './index'
+import path from 'path'
 
 /**
  * @desc 获取屏幕源
@@ -40,6 +43,13 @@ ipcMain.handle(channel_enum.EV_SEND_DESKTOP_CAPTURER_SOURCE, async () => {
   ]
 })
 
+/**
+ * @desc 获取到配置文件
+ * */
+ipcMain.handle(channel_enum.GET_CONFIG, async (): Promise<DefaultConfig> => {
+  return get_config(path.join(DEFAULT_CONFIG_PATH, '.screen'))
+})
+
 // 修改窗口宽和高
 ipcMain.on(channel_enum.SET_FULL_SCREEN, (event) => {
   // 将当前窗口宽度和高度设置为100%
@@ -61,6 +71,9 @@ ipcMain.on(channel_enum.SET_FULL_SCREEN, (event) => {
   }
 })
 
+/**
+ * @desc 取消全屏
+ * */
 ipcMain.on(channel_enum.CANCEL_FULL_SCREEN, (event) => {
   // 将当前窗口宽度和高度设置为100%
   const win = BrowserWindow.fromWebContents(event.sender)
@@ -79,3 +92,5 @@ ipcMain.on(channel_enum.CANCEL_FULL_SCREEN, (event) => {
     win.setAlwaysOnTop(false) // 将窗口放在所有窗口最上面
   }
 })
+
+
