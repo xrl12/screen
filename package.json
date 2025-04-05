@@ -22,6 +22,7 @@
     "electron": "^33.2.1",
     "electron-vite": "^2.3.0",
     "element-plus": "^2.9.2",
+    "hotkeys-js": "^3.13.9",
     "js-web-screen-shot": "^1.9.9-rc.24",
     "lodash": "^4.17.21",
     "pinia": "^2.3.0",
