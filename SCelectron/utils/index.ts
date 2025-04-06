@@ -3,10 +3,12 @@ import { default_config } from '../enum'
 import * as fs from 'node:fs'
 import type { DefaultConfig } from '../enum/type'
 
-export const open_dev_tools = (win: BrowserWindow): void => {
-  // 监听Mac的command+shift+i
+/**
+ * @desc 打开开发者工具，查看当前激活的窗口，打开开发者工具
+ * */
+export const open_dev_tools = (): void => {
   globalShortcut.register('Command+Shift+I', () => {
-    win.webContents.toggleDevTools()
+    BrowserWindow.getFocusedWindow().webContents.toggleDevTools()
   })
 }
 
@@ -23,11 +25,12 @@ export const createWindow = (
 
   // 如果是debug，则就打开开发者工具
   if (option.debug) {
-    open_dev_tools(mainWindow)
+    open_dev_tools()
   }
   if (!app.isPackaged) {
     mainWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/${url_path}`).then(() => {})
   } else {
+
   }
   return mainWindow
 }

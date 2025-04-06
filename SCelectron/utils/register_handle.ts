@@ -62,8 +62,6 @@ ipcMain.on(channel_enum.SET_FULL_SCREEN, (event) => {
     // 获取当前屏幕的宽度和高度
     win.setSize(width, height, false)
     win.setBackgroundColor('rgba(0, 0, 0, 0)')
-    // win.setBackgroundColor('rgb(0, 0, 0)')
-    // win.setSize(width, height, false)
     win.setMenuBarVisibility(false) // 隐藏菜单栏
     // win.setResizable(false) // 禁止调整窗口大小
     win.setPosition(0, 0) // 将窗口位置设置为左上角

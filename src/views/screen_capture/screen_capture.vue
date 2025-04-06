@@ -6,9 +6,12 @@
 <script setup lang="ts">
 import ScreenShot from 'js-web-screen-shot'
 import { onMounted } from 'vue'
-import { get_capture_screen, getInitStream, set_full_screen } from '@/utils/index.ts'
+import { get_capture_screen, get_config, getInitStream, set_full_screen } from '@/utils/index.ts'
 import { useRouter } from 'vue-router'
 import use_cut_img_store from '@/stores/module/CutImgStore.ts'
+import type { DefaultConfig } from '../../../SCelectron/enum/type'
+import hotkeys from 'hotkeys-js'
+import { get } from 'lodash'
 
 const router = useRouter()
 const store = use_cut_img_store()
@@ -32,16 +35,19 @@ const doScreenShot = async () => {
     },
   })
 }
-
-// const back = () => {
-//   router.push({ name: 'dashboard', params: { is_cancel: 'true' } })
-// }
 onMounted(() => {
   set_full_screen()
   doScreenShot()
-  // setTimeout(() => {
-  //   router.push({ name: 'dashboard', query: { is_cancel: "true" } })
-  // }, 1000)
+  get_config().then((res: DefaultConfig) => {
+    const hotkeyMethodMap = {
+      [res.screen_capture]: () => router.push({ name: 'screen_capture' }),
+      [res.next]: () => open(`/show_img/`),
+    }
+    hotkeys(Object.values(res).join(','), function (_, handler) {
+      const hotKey = handler.key
+      get(hotkeyMethodMap, hotKey, () => console.log('没有获取到热键'))()
+    })
+  })
 })
 </script>
 

@@ -18,7 +18,7 @@ const use_cut_img_store = defineStore('cut_img', {
     resetImg() {
       this[StoreEnum.IMG_STORE] = []
     },
-    getImg() {
+    getImg(): string[] {
       return this[StoreEnum.IMG_STORE]
     },
   },

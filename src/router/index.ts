@@ -21,6 +21,12 @@ const router = createRouter({
           component: () => import('@/views/screen_capture/screen_capture.vue'),
           meta: { title: '截屏' },
         },
+        {
+          name: 'show_img',
+          path: 'show_img',
+          component: () => import('@/views/showImg/showImg.vue'),
+          meta: { title: '图片预览' },
+        },
       ],
       meta: { title: '主页' },
     },

@@ -1,4 +1,4 @@
-import { app } from 'electron'
+import { app, BrowserWindow } from 'electron'
 import path from 'path'
 import '@/utils/register_handle.ts'
 import { createWindow } from './utils'
@@ -7,6 +7,7 @@ import { default_value } from './enum'
 app.whenReady().then(() => {
   const win = createWindow(
     'dashboard/name',
+    // 'show_img',
     { debug: true },
     {
       title: '截图小工具',
@@ -23,6 +24,16 @@ app.whenReady().then(() => {
     },
   )
   win.setBackgroundColor('rgba(0, 0, 0, 0)')
+  win.webContents.setWindowOpenHandler(() => {
+    return {
+      action: 'allow',
+      overrideBrowserWindowOptions: {
+        webPreferences: {
+          preload: path.join(__dirname, '../preload/index.js'),
+        },
+      },
+    }
+  })
 })
 
 app.on('window-all-closed', () => {
