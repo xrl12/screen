@@ -1,25 +1,23 @@
 import { defineStore } from 'pinia'
+import type { positionInfoType } from 'js-web-screen-shot/dist/lib/type/ComponentType'
 
 enum StoreEnum {
-  IMG_STORE = 'img_store',
+  CUT_IMG_PATH = 'cut_img_path',
 }
 
 const use_cut_img_store = defineStore('cut_img', {
   state: () => ({
-    [StoreEnum.IMG_STORE]: [],
+    [StoreEnum.CUT_IMG_PATH]: [],
   }),
   actions: {
-    setImg(img: string) {
-      this[StoreEnum.IMG_STORE].push(img as never)
+    setCutImgPath(path: positionInfoType) {
+      this[StoreEnum.CUT_IMG_PATH].push(path as never)
     },
-    removeImg(index: number) {
-      this[StoreEnum.IMG_STORE].splice(index, 1)
+    clearCutImgPath() {
+      this[StoreEnum.CUT_IMG_PATH] = []
     },
-    resetImg() {
-      this[StoreEnum.IMG_STORE] = []
-    },
-    getImg(): string[] {
-      return this[StoreEnum.IMG_STORE]
+    getCutImgPath(index: number) {
+      return this[StoreEnum.CUT_IMG_PATH]
     },
   },
 })

@@ -9,9 +9,12 @@
 import { reactive, onMounted } from 'vue'
 import { v4 as uuidV4 } from 'uuid'
 import type { CustomButtonProps } from '@/views/dashboard/type/DashboardIndexType.ts'
-import { show_alert } from '@/utils'
+import { get_config, show_alert } from '@/utils'
 import { useRouter, useRoute } from 'vue-router'
 import { cancel_full_screen } from '@/utils'
+import type { DefaultConfig } from '../../../SCelectron/enum/type'
+import hotkeys from 'hotkeys-js'
+import { get } from 'lodash'
 
 const router = useRouter()
 const route = useRoute()
@@ -49,10 +52,21 @@ const btn_list = reactive<CustomButtonProps[]>([
     },
   },
 ])
+
 onMounted(() => {
   if (route.params?.is_cancel) {
     cancel_full_screen()
   }
+
+  get_config().then((res: DefaultConfig) => {
+    const hotkeyMethodMap = {
+      [res.screen_capture]: () => router.push({ name: 'screen_capture' }),
+    }
+    hotkeys(Object.values(res).join(','), function (_, handler) {
+      const hotKey = handler.key
+      get(hotkeyMethodMap, hotKey, () => {})()
+    })
+  })
 })
 </script>
 
