@@ -10,13 +10,28 @@ const use_cut_img_store = defineStore('cut_img', {
     [StoreEnum.CUT_IMG_PATH]: [],
   }),
   actions: {
-    setCutImgPath(path: positionInfoType) {
+    /**
+     * @desc 将图片路径添加进去
+     * */
+    addCutImgPath(path: positionInfoType) {
       this[StoreEnum.CUT_IMG_PATH].push(path as never)
     },
+    /**
+     * @desc 清除所有的图片路径
+     * */
     clearCutImgPath() {
       this[StoreEnum.CUT_IMG_PATH] = []
     },
-    getCutImgPath(index: number) {
+    /**
+     * @desc 获取指定下标的图片路径
+     * */
+    getCutImgPath(index: number): positionInfoType | undefined {
+      return this[StoreEnum.CUT_IMG_PATH]?.[index]
+    },
+    /**
+     * @desc 获取到所有的图片路径
+     * */
+    getAllCutImgPath(): positionInfoType[] {
       return this[StoreEnum.CUT_IMG_PATH]
     },
   },

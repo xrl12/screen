@@ -8,7 +8,7 @@ app.whenReady().then(() => {
   const win = createWindow(
     'dashboard/name',
     // 'show_img',
-    { debug: true },
+    { debug: process.env.NODE_ENV !== 'production' },
     {
       title: '截图小工具',
       width: default_value.MAIN_WINDOW_WIDTH,

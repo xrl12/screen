@@ -30,7 +30,6 @@ export const createWindow = (
   if (!app.isPackaged) {
     mainWindow.loadURL(`${process.env['ELECTRON_RENDERER_URL']}/${url_path}`).then(() => {})
   } else {
-
   }
   return mainWindow
 }

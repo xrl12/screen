@@ -4,7 +4,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import ScreenShot from 'js-web-screen-shot'
+import ScreenShot from 'js-web-screen-shot-alex'
 import { onMounted, onUnmounted } from 'vue'
 import { get_capture_screen, get_config, getInitStream, set_full_screen } from '@/utils/index.ts'
 import { useRouter } from 'vue-router'
@@ -17,6 +17,10 @@ import type { DefaultConfig } from '../../../SCelectron/enum/type'
 
 const router = useRouter()
 const store = use_cut_img_store()
+// 当前展示的是第几个图片的缩影
+let currentShowImgPathIndex = 0
+// 是否是第一次展示图片
+let isFirstShowImgPath = true
 let screenShotIns: ScreenShot | null = null
 const doScreenShot = async () => {
   const sources = await get_capture_screen() // 这里返回的是设备上的所有窗口信息
@@ -27,7 +31,7 @@ const doScreenShot = async () => {
     screenFlow: stream!, // 传入屏幕流数据
     level: 9999999,
     completeCallback: ({ cutInfo }) => {
-      store.setCutImgPath(cutInfo)
+      store.addCutImgPath(cutInfo)
       router.push({ name: 'dashboard', params: { is_cancel: 'true' } })
     },
     cancelCallback: () => {
@@ -46,10 +50,6 @@ const doScreenShot = async () => {
     ],
   })
 }
-// /**
-//  * @desc 手动指定区域截图
-//  * */
-// const appoint_screen_area = (x: number, y: number, width: number, height: number): void => {}
 
 /**
  * @desc 监听热键
@@ -57,15 +57,40 @@ const doScreenShot = async () => {
 const listen_hot_key = (): void => {
   get_config().then((res: DefaultConfig) => {
     const hotkeyMethodMap = {
-      [res.next]: () => {
-        const area = store.getCutImgPath(0)
-        const canvas = screenShotIns?.getCanvasController()
-        // screenShotIns.setCutArea(area.x, area.y, area.width, area.height)
-        // console.log('canvas', canvas)
+      [res.previous]: () => {
+        if (isFirstShowImgPath) {
+          currentShowImgPathIndex = store.getAllCutImgPath().length - 1
+          if (currentShowImgPathIndex < 0) currentShowImgPathIndex = 0
+          isFirstShowImgPath = false
+        }
+        const area = store.getCutImgPath(currentShowImgPathIndex)
 
-        // screenShotIns?.completeScreenshot()
+        if (area) {
+          currentShowImgPathIndex -= 1
+          screenShotIns?.appointCropBoxArea({
+            x: area.startX,
+            y: area.startY,
+            w: area.width,
+            h: area.height,
+          })
+        }
+        // store.getCutImgPath(currentShowImgPathIndex)
+        // screenShotIns?.appointCropBoxArea({ w: 100, h: 100, x: 100, y: 100 })
       },
-      [res.previous]: () => {},
+      [res.next]: () => {
+        if (isFirstShowImgPath) return false
+        const area = store.getCutImgPath(currentShowImgPathIndex)
+
+        if (area) {
+          currentShowImgPathIndex += 1
+          screenShotIns?.appointCropBoxArea({
+            x: area.startX,
+            y: area.startY,
+            w: area.width,
+            h: area.height,
+          })
+        }
+      },
     }
     hotkeys(Object.values(res).join(','), function (_, handler) {
       const hotKey = handler.key
@@ -81,7 +106,6 @@ onMounted(() => {
 
 onUnmounted(() => {
   screenShotIns = null
-  console.log('hello world')
   hotkeys.unbind()
 })
 </script>
