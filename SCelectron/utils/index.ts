@@ -22,7 +22,6 @@ export const createWindow = (
 
   // 消失菜单栏
   mainWindow.setMenuBarVisibility(false)
-
   // 如果是debug，则就打开开发者工具
   if (option.debug) {
     open_dev_tools()

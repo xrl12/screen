@@ -1,4 +1,4 @@
-import { app } from 'electron'
+import { app, screen } from 'electron'
 import path from 'path'
 import '@/utils/register_handle.ts'
 import { createWindow } from './utils'

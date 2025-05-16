@@ -1,7 +1,7 @@
 {
   "name": "screen",
   "version": "0.0.0",
-  "private": true,
+  "private": false,
   "main": "out/main/index.js",
   "type": "module",
   "scripts": {
@@ -23,8 +23,6 @@
     "electron-vite": "^2.3.0",
     "element-plus": "^2.9.2",
     "hotkeys-js": "^3.13.9",
-    "js-web-screen-shot": "^1.9.9-rc.26",
-    "js-web-screen-shot-alex": "^1.9.9-rc.26",
     "lodash": "^4.17.21",
     "pinia": "^2.3.0",
     "sass": "^1.83.1",

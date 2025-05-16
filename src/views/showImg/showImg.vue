@@ -1,18 +1,30 @@
 <template>
-  <div class="container"></div>
+  <div class="container">
+    <img :src="img_url" alt="" />
+  </div>
 </template>
 <script setup lang="ts">
-import use_cut_img_store from '@/stores/module/CutImgStore.ts'
-import { onMounted } from 'vue'
+// import { useRoute } from 'vue-router'
+import { onMounted, ref } from 'vue'
 
-const store = use_cut_img_store()
+// /**
+//  * @desc 将base64转换为图片
+//  * @param {string} base64
+//  * */
+// const convertBase2Img = (base64: string) => {
+//   const img = new Image()
+//   img.src = base64
+//   return img
+// }
 
-for (let i = 0; i < imgs.length; i++) {
-  console.log('imgs', imgs[i])
-}
+const img_url = ref<string | undefined>(void 0)
+// const route = useRoute()
 onMounted(() => {
-  // const container = document.querySelector('.container')
-  // container.innerHTML = `imgs${imgs}`
+  // 获取当前URL的查询参数部分
+  const queryString = window.location.search
+  // 使用 URLSearchParams 解析查询参数
+  const params = new URLSearchParams(queryString)
+  img_url.value = params.get('img_url') as string
 })
 </script>
 

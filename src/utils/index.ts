@@ -85,3 +85,20 @@ export const cancel_full_screen = () => {
 export const get_config = async () => {
   return await window.electron.GetConfig()
 }
+
+/**
+ * @desc 把base64解析成URL
+ * @param base64 图片的base64数据
+ * */
+export const transfer_base_2_url = (base64: string): string => {
+  const byteString = atob(base64.split(',')[1]) // 解码 Base64 数据
+  const mimeString = base64.split(',')[0].split(':')[1].split(';')[0] // 获取 MIME 类型
+
+  const arrayBuffer = new Uint8Array(byteString.length)
+  for (let i = 0; i < byteString.length; i++) {
+    arrayBuffer[i] = byteString.charCodeAt(i)
+  }
+
+  const blob = new Blob([arrayBuffer], { type: mimeString }) // 创建 Blob 对象
+  return URL.createObjectURL(blob) // 转换为 URL
+}
