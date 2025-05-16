@@ -32,6 +32,16 @@ onMounted(() => {
 .container {
   width: 100%;
   height: 100%;
-  background: rgba(0, 0, 0);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  & img {
+    width: 100%;
+    height: auto; /* 保持宽高比 */
+    max-width: 100%; /* 限制图片最大宽度 */
+    max-height: 100%; /* 限制图片最大高度 */
+    object-fit: contain; /* 确保图片完整显示 */
+  }
 }
 </style>

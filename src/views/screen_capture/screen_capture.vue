@@ -42,12 +42,17 @@ const doScreenShot = async () => {
     level: 9999999,
     menuBarHeight: 0,
     completeCallback: ({ cutInfo, base64 }) => {
+      console.log(cutInfo, 'cutInfo')
       store.addCutImgPath(cutInfo)
       if (is_show_img) {
         const img_url = transfer_base_2_url(base64)
         const params = new URLSearchParams()
         params.append('img_url', img_url)
-        open(`show_img?${params.toString()}`)
+        open(
+          `show_img?${params.toString()}`,
+          '_blank',
+          `width=${cutInfo.width},height=${cutInfo.height},top=${cutInfo.x}`,
+        )
       }
       is_show_img = false
       router.push({ name: 'dashboard', params: { is_cancel: 'true' } })

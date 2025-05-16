@@ -28,9 +28,10 @@ app.whenReady().then(() => {
     return {
       action: 'allow',
       overrideBrowserWindowOptions: {
-        webPreferences: {
-          preload: path.join(__dirname, '../preload/index.js'),
-        },
+        // frame: false,
+      // webPreferences: {
+      //   preload: path.join(__dirname, '../preload/index.js'),
+      // },
       },
     }
   })
